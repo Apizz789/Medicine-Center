@@ -1,0 +1,150 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Medicine.BackEnd;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ *
+ * @author weera
+ */
+public class Drug extends Person {
+
+    public static int getindexDrug(String s) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private String kind;
+    private String name;
+    private String description;
+    private String expire;
+    private String price;
+    private String stock;
+
+    public Drug() {
+    }
+
+    public Drug(String kind, String name, String description, String expire, String price, String stock) {
+        this.kind = kind;
+        this.name = name;
+        this.description = description;
+        this.expire = expire;
+        this.price = price;
+        this.stock = stock;
+    }
+
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
+    }
+
+    public String getExpire() {
+        return expire;
+    }
+
+    public void setExpire(String expire) {
+        this.expire = expire;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getStock() {
+        return stock;
+    }
+
+    public void setStock(String stock) {
+        this.stock = stock;
+    }
+
+    public static int searchDrug(String name, String kind, ArrayList<Drug> source) {
+        ArrayList<Integer> byName, byKind, result;
+        byName = new ArrayList<>();
+        byKind = new ArrayList<>();
+
+        if (source != null) {
+            for (int i = 0; i < source.size(); i++) {
+                if (source.get(i).getName().equals(name)) {
+                    byName.add(i);
+                }
+                if (source.get(i).getKind().equals(kind)) {
+                    byKind.add(i);
+                }
+            }
+        }
+        if (byName.size() > 0 && byKind.size() > 0) {
+            result = (ArrayList<Integer>) Drug.intersection(byKind, byName);
+        } else {
+            result = byName.size() > 0 ? byName : byKind;
+        }
+        if (result != null && result.size() > 0) {
+            return result.get(0);
+        } else {
+            return -1;
+        }
+
+    }
+
+    public static <T> List<T> intersection(List<T> list1, List<T> list2) {
+        List<T> list = new ArrayList<>();
+        list1.stream().filter((t) -> (list2.contains(t))).forEachOrdered((t) -> {
+            list.add(t);
+        });
+        return list;
+    }
+
+    public static int getIdxDrug(String name) {
+        Database db = new Database();
+        db.setFile("Drugs");
+        ArrayList<Drug> arr;
+        if (db.check()) {
+            arr = API.getAllDrug();
+            int res = Drug.searchDrug(name, "", arr);
+            return res;
+        } else {
+            System.out.println("Get Indx Drug Falied.");
+            return -1;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Drug{" + "kind=" + kind + ", name=" + name +", description=" + description + ", expire=" + expire +  ", price=" + price + ", stock=" + stock + '}'+"\n";
+    }
+
+ 
+
+    @Override
+    public String getRole() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+}
